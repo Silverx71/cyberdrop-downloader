@@ -11,7 +11,6 @@ def export_from(short_code: str, asynchronous: bool=False) -> list:
         short_code, str), "The 'short_code' has to be of type string and must represents the resource's endpoint."
 
     url = "https://cyberdrop.me/a/" + short_code
-    print(url)
     http = requests.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with requests.urlopen(http) as response:
         html = response.read().decode("utf-8")
