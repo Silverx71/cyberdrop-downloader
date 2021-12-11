@@ -10,11 +10,11 @@ def export_from(short_code: str, asynchronous: bool=False) -> list:
     assert isinstance(
         short_code, str), "The 'short_code' has to be of type string and must represents the resource's endpoint."
 
-    url = "https://cyberdrop.me/a/" + short_code
-    http = requests.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with requests.urlopen(http) as response:
-        html = response.read().decode("utf-8")
+    http = requests.Request("https://cyberdrop.me/a/" + short_code, headers={"User-Agent": "Mozilla/5.0"})
+    response = requests.urlopen(http)
+    html = response.read().decode("utf-8")
     response.close()
+
     regexed_urls = urls_regex.findall(html)
 
     urls = []
@@ -38,7 +38,9 @@ def downloader(url: str, output: str, skip_video: bool = False):
     if skip_video and is_video(url): return
 
     http = requests.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    data = requests.urlopen(http).read()
+    response = requests.urlopen(http)
+    data = response.read()
+    response.close()
 
     if len(data) <= 0: return
 
