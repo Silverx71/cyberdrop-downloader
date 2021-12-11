@@ -1,9 +1,9 @@
 import os
-import urllib.request as requests
 import re
+import urllib.request as requests
 
 urls_regex = re.compile(
-    r"(https:\/\/[^cdn\.][a-z0-9\-]+.cyberdrop.to\/[a-z0-9_\-A-Z]+.(jpg|png|mp4|mkv|avi|jpeg|gif|webm|webp|wmv|mov))")
+    r"https:\/\/[^cdn\.][a-z0-9\-]+.cyberdrop.to\/[a-z0-9_\-A-Z]+.(?:mp4|mov|m4v|ts|mkv|avi|wmv|webm|vob|gifv|mpg|mpeg|mp3|flac|wav|png|jpeg|jpg|gif|bmp|webp|heif|heic|tiff|svf|svg|ico|psd|ai|pdf|txt|log|csv|xml|cbr|zip|rar|7z|tar|gz|xz|targz|tarxz|iso|torrent|kdbx)")
 
 
 def export_from(short_code: str, asynchronous: bool=False) -> list:
@@ -18,13 +18,12 @@ def export_from(short_code: str, asynchronous: bool=False) -> list:
     regexed_urls = urls_regex.findall(html)
 
     urls = []
-    for match in regexed_urls:
-        url = match[0]
-        if url not in urls:
-            if asynchronous:
-                yield url
-            else:
-                urls.append(url)
+    for url in regexed_urls:
+        if url in urls: continue
+        if asynchronous:
+            yield url
+        else:
+            urls.append(url)
 
     if not asynchronous:
         return urls
