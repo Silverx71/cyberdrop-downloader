@@ -30,8 +30,9 @@ def main(username: str, short_code: str = None, download: bool = False):
     knowned_data: list = json.load(open(os.path.join(output, meta_filename)))
 
     if short_code:
-        knowned_data.extend([url for url in export_from(
-            short_code, asynchronous=True) if url not in knowned_data])
+        for url in export_from(short_code, asynchronous=True):
+            if url not in knowned_data:
+                knowned_data.append(url)
 
     # Saves the meta data :
     json.dump(knowned_data, open(os.path.join(output, meta_filename), "w+"))
