@@ -1,8 +1,8 @@
 import os
 import re
+import http.client as http_client
 import urllib.request as requests
 import urllib.error as requests_error
-import http.client as http_client
 
 urls_regex = re.compile(
     r"(?:https:\/\/)[^cdn\.][a-z0-9\-\/\.]+.cyberdrop.(?:to|me)\/[a-z0-9_\-A-Z \(\)\/]+.(?:mp4|mov|m4v|ts|mkv|avi|wmv|webm|vob|gifv|mpg|mpeg|mp3|flac|wav|png|jpeg|jpg|gif|bmp|webp|heif|heic|tiff|svf|svg|ico|psd|ai|pdf|txt|log|csv|xml|cbr|zip|rar|7z|tar|gz|xz|targz|tarxz|iso|torrent|kdbx)")
@@ -35,8 +35,11 @@ def export_from(short_code: str, asynchronous: bool=False) -> list:
         return urls
 
 
-def is_video(url: str):
-    return url[-3:] in ("mp4", "mkv", "mov")
+def is_video(url: str) -> bool:
+    for e in ("mp4", "mov", "m4v", "ts", "mkv", "avi", "wmv", "webm", "vob", "gifv", "mpg", "mpeg"):
+        if url.endswith(e):
+            return True
+    return False
 
 
 def downloader(url: str, output: str, skip_video: bool = False):
